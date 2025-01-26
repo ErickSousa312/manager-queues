@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.purple_border {
+    box-shadow: 4px 4px 1px rgb(217 119 6 / var(--tw-bg-opacity));
+}
+
+.black_border {
+    box-shadow: 4px 4px 1px rgb(0, 0, 0);
+}
+
+
+/* width */
+::-webkit-scrollbar {
+    background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1));
+    width: 7px;
+    right: 15px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #04b60400;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background-color: #3b82f6; /* Cor do botão de rolagem */
+    border-radius: 2px; /* Borda arredondada do botão de rolagem */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(187, 41, 41);
+}
+@layer base {
+  :root {
+        --radius: 0.5rem;
+    }
+}
