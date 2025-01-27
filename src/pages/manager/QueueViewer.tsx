@@ -3,6 +3,7 @@ import { GuicheCount } from "@/shared/components/GuicheCount";
 import { Header } from "@/shared/components/Header";
 import { MainDisplay } from "@/shared/components/MainDisplay";
 import { QueueDisplay } from "@/shared/components/QueueDisplay";
+import { apiAddress } from "@/shared/services/api";
 import React, { useEffect, useState } from "react";
 
 const QueueViewer = () => {
@@ -11,7 +12,7 @@ const QueueViewer = () => {
   const [currentPassword, setCurrentPassword] = useState<any | null>(null);
 
   useEffect(() => {
-    const socket = new WebSocket("ws://192.168.100.133:3001");
+    const socket = new WebSocket(apiAddress);
     socket.onopen = () => {
       console.log("Conectado ao servidor WebSocket 2");
       setWs(socket);
