@@ -246,7 +246,7 @@ export default function TicketGenerator() {
         {passwords.length > 0 && (
           <button
             onClick={() => printAllTickets("normal")}
-            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded ml-4 shadow"
+            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mb-4 ml-4 shadow"
           >
             Imprimir Todas as Senhas
           </button>
@@ -255,7 +255,7 @@ export default function TicketGenerator() {
         {passwords.length > 0 && (
           <button
             onClick={() => printAllTickets("priority")}
-            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded ml-4 shadow"
+            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mb-4 ml-4 shadow"
           >
             Imprimir Todas as Senhas Prioridade
           </button>
@@ -265,7 +265,7 @@ export default function TicketGenerator() {
         {passwords.length > 0 && (
           <button
             onClick={excludePasswords}
-            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-4 shadow"
+            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-4 ml-4 shadow"
           >
             Excluir Todas as Senhas
           </button>
