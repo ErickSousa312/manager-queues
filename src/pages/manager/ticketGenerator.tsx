@@ -3,6 +3,7 @@ import { LogoutButton } from "@/shared/components/buttons/LogoutButton";
 import { Header } from "@/shared/components/Header";
 import { apiAddress } from "@/shared/services/api";
 import { useEffect, useState } from "react";
+import { c } from "vite/dist/node/types.d-aGj9QkWt";
 
 interface Ticket {
   number: string;
@@ -14,6 +15,17 @@ export default function TicketGenerator() {
   const [lastTicketNumber, setLastTicketNumber] = useState(0);
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [passwords, setPasswords] = useState<any[]>([]);
+  const [passwordsNormaly, setPasswordsNormaly] = useState<any[]>([]);
+  const [passwordsPriority, setPasswordsPriority] = useState<any[]>([]);
+  const printSelect = new Map<string, any[]>([
+    ["normal", passwordsNormaly], // Inicia o contador de senhas normais
+    ["priority", passwordsPriority], // Inicia o contador de senhas prioritárias
+  ]);
+
+  const handleMessage: Record<string, any[]> = {
+    normal: passwordsNormaly,
+    priority: passwordsPriority,
+  };
 
   useEffect(() => {
     const socket = new WebSocket(apiAddress);
@@ -31,6 +43,23 @@ export default function TicketGenerator() {
           console.log("broadcast");
           console.log(data);
           setPasswords(data.allPasswordGenerated);
+          const datapriority = data.allPasswordGenerated.filter(
+            (password: any) => {
+              if (password.id.startsWith("P")) {
+                return password;
+              }
+            },
+          );
+          console.log(datapriority);
+          const datanormaly = data.allPasswordGenerated.filter(
+            (password: any) => {
+              if (password.id.startsWith("A")) {
+                return password;
+              }
+            },
+          );
+          setPasswordsNormaly(datanormaly);
+          setPasswordsPriority(datapriority);
         }
       } catch (error) {
         console.log("mensagem:", event.data);
@@ -52,6 +81,16 @@ export default function TicketGenerator() {
       );
     }
   }
+  function callnewTicketPriority() {
+    if (ws) {
+      ws.send(
+        JSON.stringify({
+          type: "generatePassword",
+          priority: true,
+        }),
+      );
+    }
+  }
   function excludePasswords() {
     ws?.send(
       JSON.stringify({
@@ -66,25 +105,6 @@ export default function TicketGenerator() {
       }),
     );
   }
-
-  // Função para gerar uma nova senha
-  const generateTicket = () => {
-    const newNumber = lastTicketNumber + 1;
-    const newTicket: Ticket = {
-      number: `A${newNumber.toString().padStart(3, "0")}`,
-      timestamp: new Date(),
-    };
-    setTickets([...tickets, newTicket]);
-    setLastTicketNumber(newNumber);
-  };
-
-  const getTicketByPassssword = (passsword: string) => {
-    const ticket = tickets.find((ticket) => ticket.number === passsword);
-    if (ticket) {
-      return ticket;
-    }
-    return null;
-  };
 
   // Função para imprimir uma senha específica
   const printTicket = (ticket: Password) => {
@@ -130,7 +150,9 @@ export default function TicketGenerator() {
   };
 
   // Função para imprimir todas as senhas
-  const printAllTickets = () => {
+  const printAllTickets = (selectArray: string) => {
+    const arrayprint = handleMessage[selectArray];
+
     const printWindow = window.open("", "senhas");
     if (printWindow) {
       printWindow.document.write(`
@@ -174,11 +196,11 @@ export default function TicketGenerator() {
   <body>
     <h1>Todas as Senhas</h1>
     <div class="container">
-      ${passwords
+      ${arrayprint
         .map(
-          (ticket) => `
+          (array) => `
           <div class="ticket">
-            <h2> Senha: ${ticket.id}</h2>
+            <h2> Senha: ${array.id}</h2>
           </div>
         `,
         )
@@ -210,14 +232,32 @@ export default function TicketGenerator() {
         >
           Gerar Nova Senha
         </button>
+        {/* Botão para gerar nova senha */}
+        <button
+          onClick={() => {
+            callnewTicketPriority();
+          }}
+          className="bg-indigo-500 ml-4 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded mb-4 shadow"
+        >
+          Gerar Nova Senha de Prioridade
+        </button>
 
         {/* Botão para imprimir todas as senhas */}
         {passwords.length > 0 && (
           <button
-            onClick={printAllTickets}
+            onClick={() => printAllTickets("normal")}
             className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded ml-4 shadow"
           >
             Imprimir Todas as Senhas
+          </button>
+        )}
+        {/* Botão para imprimir todas as senhas */}
+        {passwords.length > 0 && (
+          <button
+            onClick={() => printAllTickets("priority")}
+            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded ml-4 shadow"
+          >
+            Imprimir Todas as Senhas Prioridade
           </button>
         )}
 
@@ -241,40 +281,72 @@ export default function TicketGenerator() {
           </button>
         )}
 
-        {/* Lista de senhas geradas */}
-        <div className="bg-white shadow-md rounded-lg p-6 pt-4 mt-2">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">
-            Senhas Geradas Não Usadas
-          </h2>
-          {passwords.length === 0 ? (
-            <p className="text-gray-600">Nenhuma senha gerada ainda.</p>
-          ) : (
-            <ul className="space-y-3">
-              {passwords?.map((ticket, index) => {
-                if (!ticket.called) {
-                  return (
-                    <li
-                      key={index}
-                      className="flex justify-between items-center bg-gray-200 text-gray-800 p-3 rounded shadow"
-                    >
-                      <span className="text-lg font-sans font-medium">
-                        Senha: {ticket.id}
-                      </span>
-                      <button
-                        onClick={() => printTicket(ticket)}
-                        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded text-sm shadow"
+        <div className="flex flex-wrap gap-4">
+          <div className="bg-white shadow-md rounded-lg p-6 pt-4 mt-2 flex-1">
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">
+              Senhas Geradas Não Usadas
+            </h2>
+            {passwordsNormaly.length === 0 ? (
+              <p className="text-gray-600">Nenhuma senha gerada ainda.</p>
+            ) : (
+              <ul className="space-y-3">
+                {passwordsNormaly?.map((ticket, index) => {
+                  if (!ticket.called) {
+                    return (
+                      <li
+                        key={index}
+                        className="flex justify-between items-center bg-gray-200 text-gray-800 p-3 rounded shadow"
                       >
-                        Imprimir
-                      </button>
-                    </li>
-                  );
-                }
+                        <span className="text-lg font-sans font-medium">
+                          Senha: {ticket.id}
+                        </span>
+                        <button
+                          onClick={() => printTicket(ticket)}
+                          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded text-sm shadow"
+                        >
+                          Imprimir
+                        </button>
+                      </li>
+                    );
+                  }
+                  return null;
+                })}
+              </ul>
+            )}
+          </div>
 
-                // Retorne um fallback ou continue com outro conteúdo caso não atenda à condição
-                return null;
-              })}
-            </ul>
-          )}
+          <div className="bg-white shadow-md rounded-lg p-6 pt-4 mt-2 flex-1">
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">
+              Senhas Prioridade Geradas Não Usadas
+            </h2>
+            {passwordsPriority.length === 0 ? (
+              <p className="text-gray-600">Nenhuma senha gerada ainda.</p>
+            ) : (
+              <ul className="space-y-3">
+                {passwordsPriority?.map((ticket, index) => {
+                  if (!ticket.called) {
+                    return (
+                      <li
+                        key={index}
+                        className="flex justify-between items-center bg-gray-200 text-gray-800 p-3 rounded shadow"
+                      >
+                        <span className="text-lg font-sans font-medium">
+                          Senha: {ticket.id}
+                        </span>
+                        <button
+                          onClick={() => printTicket(ticket)}
+                          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded text-sm shadow"
+                        >
+                          Imprimir
+                        </button>
+                      </li>
+                    );
+                  }
+                  return null;
+                })}
+              </ul>
+            )}
+          </div>
         </div>
       </div>
     </>

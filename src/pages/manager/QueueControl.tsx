@@ -59,6 +59,17 @@ const QueueControl = () => {
       );
     }
   };
+  const callNextPasswordPriority = (guiche: string) => {
+    if (ws) {
+      ws.send(
+        JSON.stringify({
+          type: "callNextPassword",
+          guiche,
+          priority: true,
+        }),
+      );
+    }
+  };
 
   return (
     <>
@@ -78,26 +89,31 @@ const QueueControl = () => {
             guiche="1"
             callnextGuiche={() => callNextPassword("1")}
             currentPassword={getcurrentPasswordByGuiche("1")}
+            callnextGuichePriority={() => callNextPasswordPriority("1")}
           ></GuicheCount>
           <GuicheCount
             guiche="2"
             callnextGuiche={() => callNextPassword("2")}
             currentPassword={getcurrentPasswordByGuiche("2")}
+            callnextGuichePriority={() => callNextPasswordPriority("2")}
           ></GuicheCount>
           <GuicheCount
             guiche="3"
             callnextGuiche={() => callNextPassword("3")}
             currentPassword={getcurrentPasswordByGuiche("3")}
+            callnextGuichePriority={() => callNextPasswordPriority("3")}
           ></GuicheCount>
           <GuicheCount
             guiche="4"
             callnextGuiche={() => callNextPassword("4")}
             currentPassword={getcurrentPasswordByGuiche("4")}
+            callnextGuichePriority={() => callNextPasswordPriority("4")}
           ></GuicheCount>
           <GuicheCount
             guiche="5"
             callnextGuiche={() => callNextPassword("5")}
             currentPassword={getcurrentPasswordByGuiche("5")}
+            callnextGuichePriority={() => callNextPasswordPriority("5")}
           ></GuicheCount>
         </div>
       </div>
