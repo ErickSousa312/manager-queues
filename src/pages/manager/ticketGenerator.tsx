@@ -175,20 +175,27 @@ export default function TicketGenerator() {
         gap: 20px; /* Espaço entre os itens */
       }
       .ticket {
-        flex: 1 1 calc(25% - 20px); /* Cada item ocupa 50% do espaço */
-        max-width: calc(25% - 20px);
-        border: 1px solid #ccc;
+        flex: 1 1 calc(30% - 20px); /* Cada item ocupa 50% do espaço */
+        max-width: calc(30% - 20px);
+        border:1px solid #000;
         border-radius: 8px;
-        padding: 20px;
+        padding: 5px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        text-align: left; /* Alinhamento do conteúdo interno */
+        text-align: center; /* Alinhamento do conteúdo interno */
       }
       .ticket h2 {
-        font-size: 36px;
+        font-size: 30px;
         margin: 0 0 10px 0;
       }
+      .ticket h3 {
+        font-size: 25px;
+        margin: 0 0 10px 0;
+        border-bottom: 1px solid #000; /* Linha abaixo do título */
+        padding-bottom: 7px; /* Espaçamento entre o texto e a linha */
+      }
       .ticket p {
-        font-size: 18px;
+        font-size: 12px;
+        text-align: center; 
         margin: 0;
       }
     </style>
@@ -200,7 +207,9 @@ export default function TicketGenerator() {
         .map(
           (array) => `
           <div class="ticket">
+          <h3> Regulação</h3>
             <h2> Senha: ${array.id}</h2>
+            <p> ATENÇÃO PARA A REGULAÇÃO DE CIRURGIA SUA SENHA SERÁ CHAMADA APÓS AVALIAÇÃO E APROVAÇÃO DO MÉDICO REGULADOR DA CENTRAL</p>
           </div>
         `,
         )
