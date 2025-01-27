@@ -1,6 +1,7 @@
 import { Password } from "@/@types/passwords";
 import { LogoutButton } from "@/shared/components/buttons/LogoutButton";
 import { Header } from "@/shared/components/Header";
+import { apiAddress } from "@/shared/services/api";
 import { useEffect, useState } from "react";
 
 interface Ticket {
@@ -15,7 +16,7 @@ export default function TicketGenerator() {
   const [passwords, setPasswords] = useState<any[]>([]);
 
   useEffect(() => {
-    const socket = new WebSocket("ws://192.168.100.133:3001");
+    const socket = new WebSocket(apiAddress);
     socket.onopen = () => {
       console.log("Conectado ao servidor WebSocket 2");
       setWs(socket);

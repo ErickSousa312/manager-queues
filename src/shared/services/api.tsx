@@ -1,5 +1,7 @@
 import axios from "axios";
 
+export const apiAddress = "ws://192.168.100.133:3001";
+
 const api = axios.create({
   baseURL: "http://192.168.100.133:3000/",
 });
