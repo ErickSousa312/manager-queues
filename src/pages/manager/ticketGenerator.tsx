@@ -3,7 +3,6 @@ import { LogoutButton } from "@/shared/components/buttons/LogoutButton";
 import { Header } from "@/shared/components/Header";
 import { apiAddress } from "@/shared/services/api";
 import { useEffect, useState } from "react";
-import { c } from "vite/dist/node/types.d-aGj9QkWt";
 
 interface Ticket {
   number: string;
@@ -125,20 +124,37 @@ export default function TicketGenerator() {
                 margin: 0; 
               }
               .ticket {
-                  flex: 1 1 calc(30% - 40px); /* Cada item ocupa 50% do espaço */
-                  max-width: calc(30% - 40px);
-                  border: 1px solid #ccc;
-                  border-radius: 8px;
-                  padding: 20px;
-                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                  text-align: left; /* Alinhamento do conteúdo interno */
+                flex: 1 1 calc(30% - 20px); /* Cada item ocupa 50% do espaço */
+                max-width: calc(30% - 20px);
+                border:1px solid #000;
+                border-radius: 8px;
+                padding: 5px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                text-align: center; /* Alinhamento do conteúdo interno */
               }
+              .ticket h2 {
+        font-size: 30px;
+        margin: 0 0 10px 0;
+      }
+      .ticket h3 {
+        font-size: 25px;
+        margin: 0 0 10px 0;
+        border-bottom: 1px solid #000; /* Linha abaixo do título */
+        padding-bottom: 7px; /* Espaçamento entre o texto e a linha */
+      }
+      .ticket p {
+        font-size: 12px;
+        text-align: center; 
+        margin: 0;
+      }
             </style>
           </head>
           <body >
           <div class="container">
           <div class="ticket">
-            <h1>Senha: ${ticket.id}</h1>
+          <h3> Regulação</h3>
+            <h2> Senha: ${ticket.id}</h2>
+            <p> ATENÇÃO PARA A REGULAÇÃO DE CIRURGIA SUA SENHA SERÁ CHAMADA APÓS AVALIAÇÃO E APROVAÇÃO DO MÉDICO REGULADOR DA CENTRAL</p>
           </div>
           </div>
           </body>

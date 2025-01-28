@@ -51,10 +51,10 @@ const QueueViewer = () => {
             {passwords.slice(1).map((item, index) => (
               <li
                 key={index}
-                className="flex items-center justify-between bg-blue-600 rounded-md p-4 shadow-md"
+                className="flex items-center justify-between bg-blue-600 pl-10 pr-10 rounded-md p-4 shadow-md"
               >
-                <span className="text-2xl font-bold">{item.id}</span>
-                <span className="text-2xl">{`Guichê ${item.guiche}`}</span>
+                <span className="text-3xl font-bold">{item.id}</span>
+                <span className="text-3xl">{`Guichê ${item.guiche}`}</span>
               </li>
             ))}
           </ul>

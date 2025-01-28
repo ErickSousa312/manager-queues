@@ -1,10 +1,10 @@
 import axios from "axios";
 
-export const apiAddress = "ws://192.168.100.133:3001";
-export const apiAddressApi = "http://192.168.100.133:3000/";
+export const apiAddress = "wss://reg-websocket.helpdesk-maraba.cloud/";
+export const apiAddressApi = "https://reg-api.helpdesk-maraba.cloud/";
 
 const api = axios.create({
-  baseURL: "http://192.168.100.133:3000/",
+  baseURL: "https://reg-api.helpdesk-maraba.cloud/",
 });
 
 api.interceptors.request.use((config) => {
