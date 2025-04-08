@@ -31,10 +31,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     console.log("chamou use effect auth");
 
-    if (token && storedRole) {
+    if (token && storedRole && storedUser) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       const parsedUser = JSON.parse(storedUser);
-      setUser({ ...parsedUser, role: storedRole || parsedUser.role });
+      setUser({ ...parsedUser, role: storedRole || "admin" });
     }
   }, []);
 

@@ -4,17 +4,20 @@ import { Header } from "@/shared/components/Header";
 import { MainDisplay } from "@/shared/components/MainDisplay";
 import { QueueDisplay } from "@/shared/components/QueueDisplay";
 import { apiAddress } from "@/shared/services/api";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 const QueueControl = () => {
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [passwords, setPasswords] = useState<any[]>([]);
   const [currentPassword, setCurrentPassword] = useState<any | null>(null);
 
-  useEffect(() => {
+  const count = useRef(0);
+
+  const connectWebSocket = () => {
     const socket = new WebSocket(apiAddress);
+
     socket.onopen = () => {
-      console.log("Conectado ao servidor WebSocket 2");
+      console.log("Conectado ao servidor WebSocket");
       setWs(socket);
     };
 
@@ -34,19 +37,30 @@ const QueueControl = () => {
       }
     };
 
-    return () => {
-      socket.close();
+    socket.onerror = (err) => {
+      console.error("Erro de WebSocket:", err);
     };
-  }, []);
+
+    socket.onclose = () => {
+      console.log("Conexão WebSocket fechada, tentando reconectar...");
+      reconnect();
+    };
+
+    setWs(socket);
+  };
+
+  const reconnect = () => {
+    setTimeout(() => {
+      console.log("Tentando reconectar ao servidor WebSocket...");
+      connectWebSocket();
+    }, 5000);
+  };
 
   const getcurrentPasswordByGuiche = (guiche: string) => {
     const currentPassword = passwords.find(
       (password) => password.guiche === guiche,
     );
-    if (currentPassword) {
-      return currentPassword.id;
-    }
-    return null;
+    return currentPassword ? currentPassword.id : null;
   };
 
   const callNextPassword = (guiche: string) => {
@@ -59,6 +73,7 @@ const QueueControl = () => {
       );
     }
   };
+
   const callNextPasswordPriority = (guiche: string) => {
     if (ws) {
       ws.send(
@@ -70,6 +85,16 @@ const QueueControl = () => {
       );
     }
   };
+
+  useEffect(() => {
+    connectWebSocket();
+
+    return () => {
+      if (ws) {
+        ws.close();
+      }
+    };
+  }, []);
 
   return (
     <>

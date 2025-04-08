@@ -19,7 +19,7 @@ const ProtectedRoute = ({ children, roles }: ProtectedRouteProps) => {
   //   return <Navigate to="/" />;
   // }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !storedRole) {
     return <Navigate to="/" />;
   }
 
